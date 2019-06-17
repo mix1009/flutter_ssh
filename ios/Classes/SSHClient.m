@@ -70,10 +70,10 @@ int uploadedPerc = 0;
 
 - (void) sftpDownload:(NSString *)path toPath:(NSString *)filePath error:(NSError **)error {
   _downloadContinue = true;
-  downloadedPerc = 0;
+  downloadedPerc = -1;
   NSData* data = [_sftpSession contentsAtPath:path progress: ^BOOL (NSUInteger bytes, NSUInteger fileSize) {
     int newPerc = (int)(100.0f * bytes / fileSize);
-    if (newPerc % 5 == 0 && newPerc > downloadedPerc) {
+    if (newPerc % 1 == 0 && newPerc > downloadedPerc) {
       downloadedPerc = newPerc;
       [self.delegate downloadProgressEvent:downloadedPerc withKey:self->_key];
     }
@@ -86,12 +86,12 @@ int uploadedPerc = 0;
 
 - (BOOL) sftpUpload:(NSString *)filePath toPath:(NSString *)path {
   _uploadContinue = true;
-  uploadedPerc = 0;
+  uploadedPerc = -1;
   NSString *newPath = [NSString stringWithFormat:@"%@/%@",path, [filePath lastPathComponent]];
   long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil][NSFileSize] longLongValue];
   BOOL result = [self._sftpSession writeFileAtPath:filePath toFileAtPath:newPath progress: ^BOOL (NSUInteger bytes) {
     int newPerc = (int)(100.0f * bytes / fileSize);
-    if (newPerc % 5 == 0 && newPerc > uploadedPerc) {
+    if (newPerc % 1 == 0 && newPerc > uploadedPerc) {
       uploadedPerc = newPerc;
       [self.delegate uploadProgressEvent:uploadedPerc withKey:self->_key];
     }

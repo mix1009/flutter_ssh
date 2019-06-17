@@ -493,7 +493,7 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
   private class progressMonitor implements SftpProgressMonitor {
     private long max = 0;
     private long count = 0;
-    private long completedPerc = 0;
+    private long completedPerc = -1;
     private String key;
     private String name;
 
@@ -510,7 +510,7 @@ public class SshPlugin implements MethodCallHandler, StreamHandler {
       SSHClient client = clientPool.get(this.key);
       this.count += arg0;
       long newPerc = this.count * 100 / max;
-      if(newPerc % 5 == 0 && newPerc > this.completedPerc) {
+      if(newPerc % 1 == 0 && newPerc > this.completedPerc) {
         this.completedPerc = newPerc;
         Map<String, Object> map = new HashMap<>();
         map.put("name", this.name);
